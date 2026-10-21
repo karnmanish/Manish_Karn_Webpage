@@ -98,44 +98,30 @@ header.site-nav{
 .nav-right{display:flex;align-items:center;gap:22px;padding-top:4px;}
 
 /* inline link row — shown alongside the hamburger */
-nav.links-inline{display:flex;gap:22px;align-items:center;}
-nav.links-inline a{
   font-size:.87rem;text-decoration:none;color:var(--ink-soft);
   padding:4px 0;border-bottom:1px solid transparent;transition:color .2s, border-color .2s;
   white-space:nowrap;
 }
-nav.links-inline a:hover, nav.links-inline a.active{color:var(--ink);border-color:var(--accent);}
-@media (max-width: 980px){
-  nav.links-inline{display:none;}
+@media (max-width: 560px){
+  nav.links-inline{gap:14px;}
+  nav.links-inline a{font-size:.8rem;}
+  .nav-right{gap:0;}
 }
 
 /* menu button — three parallel lines, top right, after the inline links */
-.menu-btn{
   display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;
   width:40px;height:40px;border-radius:50%;border:1px solid var(--line);
   background:none;cursor:pointer;flex:0 0 auto;transition:border-color .2s;
 }
-.menu-btn:hover{border-color:var(--accent);}
-.menu-btn span{display:block;width:17px;height:1.5px;background:var(--ink);transition:background .2s;}
 
 /* full link list lives in a slide-in panel, opened by the hamburger, on every screen size.
    Kept as a sibling of <header> (not nested inside it) — an ancestor with backdrop-filter
    creates a new containing block for position:fixed descendants, which had been clipping
    this panel to the header's own height instead of the full viewport. */
-nav.links{
-  position:fixed;top:var(--header-h, 90px);right:0;bottom:0;width:320px;max-width:88vw;
-  background:var(--paper);border-left:1px solid var(--line);
-  display:flex;flex-direction:column;padding:36px 32px;gap:20px;
-  transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;
-  z-index:99;
-}
-nav.links.open{transform:translateX(0);}
-nav.links a{
   font-size:1.02rem;text-decoration:none;color:var(--ink-soft);
   padding:4px 0;border-bottom:1px solid transparent;transition:color .2s, border-color .2s;
   white-space:nowrap;
 }
-nav.links a:hover, nav.links a.active{color:var(--ink);border-color:var(--accent);}
 
 @media (max-width: 600px){
   nav.links{width:100%;max-width:100%;}
@@ -323,6 +309,7 @@ nav.links a:hover, nav.links a.active{color:var(--ink);border-color:var(--accent
 /* ============ FOOTER ============ */
 #note{border-bottom:none;}
 footer{padding:28px 0 40px;border-top:1px solid var(--line);}
+.foot-close{font-family:var(--serif);font-style:italic;margin-left:auto;text-align:right;}
 .foot-bottom{display:flex;justify-content:space-between;padding-top:0;font-size:.82rem;color:var(--ink-soft);flex-wrap:wrap;gap:10px;}
 
 .reader-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--ink-soft);line-height:1;}
@@ -338,10 +325,10 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);}
   font-family:var(--serif);font-size:.95rem;
 }
 .inline-reader-head-tools{display:flex;align-items:center;gap:10px;flex:0 0 auto;}
-.inline-reader-body{width:100%;height:82vh;background:#fff;display:flex;flex-direction:column;}
-.deck-scroll{flex:1 1 auto;overflow:auto;background:#e9ebec;padding:16px;}
+.inline-reader-body{width:100%;height:82vh;background:#fff;display:flex;flex-direction:column;min-height:0;}
+.deck-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#e9ebec;padding:16px;}
 .deck-scroll img{display:block;width:100%;max-width:960px;margin:0 auto 14px;box-shadow:0 1px 6px rgba(0,0,0,.18);background:#fff;}
-.inline-reader-body iframe{flex:1 1 auto;width:100%;border:none;display:block;}
+.inline-reader-body iframe{flex:1 1 auto;min-height:0;width:100%;border:none;display:block;}
 .inline-reader-hint{flex:0 0 auto;padding:8px 18px;font-size:.72rem;color:var(--ink-soft);background:var(--paper-dim);border-top:1px solid var(--line);}
 @media (max-width:700px){.inline-reader-body{height:70vh;}}
 
@@ -357,7 +344,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);}
   margin-top:0;border:none;border-radius:0;display:flex;flex-direction:column;height:100vh;background:var(--paper);
 }
 .inline-reader:fullscreen .inline-reader-body{flex:1 1 auto;height:auto;}
-.inline-reader:-webkit-full-screen{margin-top:0;border:none;border-radius:0;height:100vh;}
+.inline-reader:-webkit-full-screen{margin-top:0;border:none;border-radius:0;height:100vh;display:flex;flex-direction:column;background:var(--paper);}
+.inline-reader:-webkit-full-screen .inline-reader-body{flex:1 1 auto;height:auto;min-height:0;}
+.inline-reader:fullscreen .inline-reader-head{flex:0 0 auto;}
 
 /* placeholder tag */
 .ph-tag{display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);
@@ -392,20 +381,9 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);}
         <a href="#academics">Academics</a>
         <a href="#note">A Note</a>
       </nav>
-      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
     </div>
   </div>
 </header>
-
-<!-- slide-in link panel — kept OUTSIDE the fixed header so its position:fixed
-     measures against the real viewport, not the header's own (blurred) box -->
-<nav class="links" id="navLinks">
-  <a href="#timeline">Timeline</a>
-  <a href="#academics">Academics</a>
-  <a href="#note">A Note</a>
-</nav>
 
 <!-- banner now scrolls with the page instead of living in the fixed header -->
 <div class="banner-section">
@@ -444,7 +422,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);}
       <div>
         <h2>Academics</h2>
       </div>
-      <p style="margin:0;max-width:40ch;">Engineering research, teaching, and technical publications — presented from the most recent work backward.</p>
+      <p style="margin:0;max-width:40ch;">Engineering research, teaching, and technical publications — presented from most recent work to backward.</p>
     </div>
 
     <!-- 4. Experiences -->
@@ -639,7 +617,7 @@ footer{padding:28px 0 40px;border-top:1px solid var(--line);}
   </div>
 </section>
 
-<footer><div class="wrap"><div class="foot-bottom"><span>© 2026 Manish Karn</span></div></div></footer>
+<footer><div class="wrap"><div class="foot-bottom"><span>© 2026 Manish Karn</span><span class="foot-close">Let all be well</span></div></div></footer>
 
 <!-- ============ CERTIFICATE POP-OUT LIGHTBOX ============ -->
 <div class="cert-lightbox" id="certLightbox">
@@ -719,24 +697,13 @@ syncHeaderHeight();
 window.addEventListener('resize', syncHeaderHeight);
 window.addEventListener('load', syncHeaderHeight);
 
-// hamburger menu (slide-in panel with the full link list)
-const menuBtn=document.getElementById('menuBtn'), navLinks=document.getElementById('navLinks');
-menuBtn.addEventListener('click',()=>{
-  const isOpen=navLinks.classList.toggle('open');
-  menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-});
-navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-  navLinks.classList.remove('open');
-  menuBtn.setAttribute('aria-expanded','false');
-}));
-
 // scroll-spy: active nav link + theme swap
 const sections=[
   {id:'timeline',theme:'theme-academic'},
   {id:'academics',theme:'theme-academic'},
   {id:'note',theme:'theme-academic'}
 ];
-const navAnchors=[...document.querySelectorAll('nav.links a, nav.links-inline a')];
+const navAnchors=[...document.querySelectorAll('nav.links-inline a')];
 const observer=new IntersectionObserver((entries)=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting){
